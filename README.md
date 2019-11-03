@@ -9,7 +9,7 @@ A basic example of how to use the BLoC pattern in Flutter.
 - Flutter 1.9.1
 - Android SDK or XCode for iOS
 
-Clone the repository, enter the root directory and execute 'flutter run'.
+Clone the repository, enter the root directory and execute `flutter run`.
 
 ## Acknowledgement
 
