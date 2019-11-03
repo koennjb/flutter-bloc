@@ -1,3 +1,5 @@
+import 'package:bloc_example/counter_bloc.dart';
+import 'package:bloc_example/counter_event.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -25,19 +27,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      _counter--;
-    });
-  }
+  final _bloc = CounterBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -46,35 +36,49 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+        child: StreamBuilder(
+          stream: _bloc.counter,
+          initialData: 0,
+          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+            return Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'You have pushed the button this many times:',
+                  ),
+                  Text(
+                    '${snapshot.data}',
+                    style: Theme.of(context).textTheme.display1,
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           FloatingActionButton(
-            onPressed: _incrementCounter,
+            onPressed: () => _bloc.counterEventSink.add(IncrementEvent()),
             tooltip: 'Increment',
             child: Icon(Icons.add),
           ),
           SizedBox(width: 10),
           FloatingActionButton(
-            onPressed: _decrementCounter,
+            onPressed: () => _bloc.counterEventSink.add(DecrementEvent()),
             tooltip: 'Decrement',
             child: Icon(Icons.remove),
           )
         ],
       ),
     );
+  }
+
+  void @override
+  void dispose() { 
+    super.dispose();
+    _bloc.dispose();
   }
 }
